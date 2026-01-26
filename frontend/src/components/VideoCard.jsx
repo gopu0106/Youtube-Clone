@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatViews, formatTimeAgo } from '../utils/format';
 
 const VideoCard = ({ video }) => {
     return (
@@ -15,7 +16,7 @@ const VideoCard = ({ video }) => {
                     <h3 className="video-title">{video.title}</h3>
                     <div className="video-meta">
                         <p>{video.channelId?.channelName}</p>
-                        <p>{video.views} views • {new Date(video.uploadDate).toLocaleDateString()}</p>
+                        <p>{formatViews(video.views)} views • {formatTimeAgo(video.uploadDate)}</p>
                     </div>
                 </div>
             </div>

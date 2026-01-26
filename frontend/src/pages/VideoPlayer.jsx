@@ -1,4 +1,10 @@
+import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
+import { ThumbsUp, ThumbsDown, Share2, MoreHorizontal } from 'lucide-react';
+import { formatViews, formatTimeAgo } from '../utils/format';
 
 const VideoPlayer = () => {
     const { id } = useParams();
@@ -137,7 +143,7 @@ const VideoPlayer = () => {
                 </div>
 
                 <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '16px', borderRadius: 'var(--radius-lg)', marginTop: '16px', border: '1px solid var(--glass-border)' }}>
-                    <p style={{ fontWeight: '700', fontSize: '14px' }}>{video.views} views • {new Date(video.uploadDate).toLocaleDateString()}</p>
+                    <p style={{ fontWeight: '700', fontSize: '14px' }}>{formatViews(video.views)} views • {formatTimeAgo(video.uploadDate)}</p>
                     <p style={{ marginTop: '8px', fontSize: '14px', whiteSpace: 'pre-wrap', lineHeight: '20px' }}>{video.description}</p>
                 </div>
 
@@ -180,7 +186,7 @@ const VideoPlayer = () => {
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                         <div>
                                             <p style={{ fontSize: '13px', fontWeight: '700' }}>
-                                                @{comment.userId?.username} <span style={{ fontWeight: 'normal', color: 'var(--text-secondary)', marginLeft: '8px' }}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                                                @{comment.userId?.username} <span style={{ fontWeight: 'normal', color: 'var(--text-secondary)', marginLeft: '8px' }}>{formatTimeAgo(comment.createdAt)}</span>
                                             </p>
                                             <p style={{ fontSize: '14px', marginTop: '4px', lineHeight: '20px' }}>{comment.text}</p>
                                         </div>
