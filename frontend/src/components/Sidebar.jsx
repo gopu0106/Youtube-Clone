@@ -1,42 +1,57 @@
 import React from 'react';
-import { Home, Compass, PlaySquare, Clock, ThumbsUp, ChevronRight } from 'lucide-react';
+import { Home, Compass, PlaySquare, Clock, ThumbsUp, ChevronRight, Library } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const SidebarItem = ({ icon: Icon, label, to }) => (
+const SidebarItem = ({ icon: Icon, label, to, isOpen }) => (
     <NavLink 
         to={to} 
-        style={({ isActive }) => ({
-            display: 'flex',
-            alignItems: 'center',
-            gap: '24px',
-            padding: '10px 12px',
-            borderRadius: '10px',
-            backgroundColor: isActive ? '#3f3f3f' : 'transparent',
-            color: 'white'
-        })}
+        className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
     >
-        <Icon size={22} />
-        <span style={{ fontSize: '14px' }}>{label}</span>
+        <Icon size={22} strokeWidth={label && label !== "" ? 2 : 1.5} />
+        <AnimatePresence mode="wait">
+            {isOpen && label && (
+                <motion.span 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ fontSize: '14px', whiteSpace: 'nowrap' }}
+                >
+                    {label}
+                </motion.span>
+            )}
+        </AnimatePresence>
     </NavLink>
 );
 
 const Sidebar = ({ isOpen }) => {
     return (
-        <aside className="sidebar" style={{ width: isOpen ? '240px' : '72px' }}>
-            <SidebarItem icon={Home} label={isOpen ? "Home" : ""} to="/" />
-            <SidebarItem icon={Compass} label={isOpen ? "Shorts" : ""} to="/shorts" />
-            <SidebarItem icon={PlaySquare} label={isOpen ? "Subscriptions" : ""} to="/subscriptions" />
-            <hr style={{ border: 'none', borderTop: '1px solid #3f3f3f', margin: '12px 0' }} />
+        <motion.aside 
+            className="sidebar"
+            animate={{ width: isOpen ? 240 : 72 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        >
+            <SidebarItem icon={Home} label="Home" to="/" isOpen={isOpen} />
+            <SidebarItem icon={Compass} label="Shorts" to="/shorts" isOpen={isOpen} />
+            <SidebarItem icon={PlaySquare} label="Subscriptions" to="/subscriptions" isOpen={isOpen} />
+            
+            <div className="sidebar-divider" />
+            
+            <SidebarItem icon={Library} label="Library" to="/library" isOpen={isOpen} />
+            <SidebarItem icon={Clock} label="History" to="/history" isOpen={isOpen} />
+            <SidebarItem icon={PlaySquare} label="Your videos" to="/studio" isOpen={isOpen} />
+            <SidebarItem icon={ThumbsUp} label="Liked videos" to="/liked" isOpen={isOpen} />
+            
             {isOpen && (
-                <div style={{ padding: '0 12px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <span style={{ fontWeight: '500' }}>You</span>
-                    <ChevronRight size={16} />
-                </div>
+                <>
+                    <div className="sidebar-divider" />
+                    <div className="sidebar-section-title">
+                        <span>Subscriptions</span>
+                    </div>
+                </>
             )}
-            <SidebarItem icon={Clock} label={isOpen ? "History" : ""} to="/history" />
-            <SidebarItem icon={PlaySquare} label={isOpen ? "Your videos" : ""} to="/studio" />
-            <SidebarItem icon={ThumbsUp} label={isOpen ? "Liked videos" : ""} to="/liked" />
-        </aside>
+        </motion.aside>
     );
 };
 

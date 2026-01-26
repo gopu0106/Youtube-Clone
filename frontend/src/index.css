@@ -195,6 +195,7 @@ input:focus {
 
 .sidebar {
   width: 240px;
+  max-width: 240px;
   height: calc(100vh - 56px);
   background-color: var(--bg-color);
   position: fixed;
@@ -202,7 +203,49 @@ input:focus {
   left: 0;
   padding: 12px;
   overflow-y: auto;
-  transition: transform 0.3s ease;
+  transition: width var(--transition-normal);
+  z-index: 90;
+  border-right: 1px solid var(--glass-border);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.sidebar-item.active {
+  background-color: var(--bg-tertiary);
+  font-weight: 600;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid var(--glass-border);
+  margin: 12px;
+}
+
+.sidebar-section-title {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 8px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 @media (max-width: 1200px) {
