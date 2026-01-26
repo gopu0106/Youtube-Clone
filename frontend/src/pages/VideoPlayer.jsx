@@ -101,18 +101,18 @@ const VideoPlayer = () => {
                         style={{ width: '100%', height: '100%' }}
                     />
                 </div>
-                <h1 style={{ fontSize: '20px', marginTop: '16px', fontWeight: '700', lineHeight: '28px' }}>{video.title}</h1>
+                <h1 style={{ fontSize: '22px', marginTop: '20px', fontWeight: '700', lineHeight: '1.2', color: 'var(--text-primary)' }}>{video.title}</h1>
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', flexWrap: 'wrap', gap: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--glass-border)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: '600', border: '1px solid var(--glass-border)' }}>
+                        <div className="video-avatar" style={{ width: '44px', height: '44px', fontSize: '18px' }}>
                             {video.uploader?.username?.charAt(0).toUpperCase()}
                         </div>
-                        <div>
-                            <h4 style={{ fontWeight: '600', fontSize: '16px' }}>{video.channelId?.channelName}</h4>
-                            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{video.channelId?.subscribers?.length || 0} subscribers</p>
+                        <div style={{ marginLeft: '4px' }}>
+                            <h4 style={{ fontWeight: '700', fontSize: '16px', color: 'var(--text-primary)' }}>{video.channelId?.channelName}</h4>
+                            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: '500' }}>{formatViews(video.channelId?.subscribers?.length || 0)} subscribers</p>
                         </div>
-                        <button className="btn btn-primary" style={{ marginLeft: '12px' }}>
+                        <button className="btn btn-primary" style={{ marginLeft: '16px', padding: '10px 20px', borderRadius: 'var(--radius-xl)' }}>
                             Subscribe
                         </button>
                     </div>
