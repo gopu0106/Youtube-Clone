@@ -7,6 +7,7 @@ const VideoCard = ({ video }) => {
         <Link to={`/video/${video._id}`} className="video-card">
             <div className="video-thumbnail-container">
                 <img src={video.thumbnailUrl} alt={video.title} className="video-thumbnail" />
+                <div className="duration-badge">{video.duration || '12:45'}</div>
             </div>
             <div className="video-info">
                 <div className="video-avatar">
