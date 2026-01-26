@@ -118,26 +118,29 @@ const VideoPlayer = () => {
                     </div>
                     
                     <div style={{ display: 'flex', gap: '8px' }}>
-                        <div style={{ display: 'flex', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-xl)', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                        <div style={{ display: 'flex', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-xl)', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-sm)' }}>
                             <button 
                                 onClick={handleLike}
                                 className="btn-ghost"
-                                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRight: '1px solid var(--glass-border)', color: isLiked ? '#3ea6ff' : 'inherit' }}
+                                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRight: '1px solid var(--glass-border)', color: isLiked ? '#3ea6ff' : 'var(--text-primary)' }}
                             >
-                                <ThumbsUp size={20} fill={isLiked ? '#3ea6ff' : 'none'} /> 
-                                <span style={{ fontSize: '14px', fontWeight: '600' }}>{video.likes?.length || 0}</span>
+                                <ThumbsUp size={19} fill={isLiked ? '#3ea6ff' : 'none'} /> 
+                                <span style={{ fontSize: '14px', fontWeight: '700' }}>{formatViews(video.likes?.length || 0)}</span>
                             </button>
                             <button 
                                 onClick={handleDislike}
                                 className="btn-ghost"
-                                style={{ padding: '8px 16px', color: isDisliked ? '#3ea6ff' : 'inherit' }}
+                                style={{ padding: '10px 16px', color: isDisliked ? '#3ea6ff' : 'var(--text-primary)' }}
                             >
-                                <ThumbsDown size={20} fill={isDisliked ? '#3ea6ff' : 'none'} />
+                                <ThumbsDown size={19} fill={isDisliked ? '#3ea6ff' : 'none'} />
                             </button>
                         </div>
-                        <button className="btn btn-ghost" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}>
-                            <Share2 size={20} /> 
-                            <span style={{ fontSize: '14px', fontWeight: '600' }}>Share</span>
+                        <button className="btn btn-ghost" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', padding: '10px 16px', boxShadow: 'var(--shadow-sm)' }}>
+                            <Share2 size={19} /> 
+                            <span style={{ fontSize: '14px', fontWeight: '700', marginLeft: '4px' }}>Share</span>
+                        </button>
+                        <button className="btn btn-ghost btn-icon" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-sm)' }}>
+                            <MoreHorizontal size={19} />
                         </button>
                     </div>
                 </div>
