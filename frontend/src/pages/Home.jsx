@@ -15,7 +15,7 @@ const Home = () => {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/videos?title=${searchQuery}&category=${activeCategory}`);
+                const res = await axios.get(`http://localhost:5001/api/videos?title=${searchQuery}&category=${activeCategory}`);
                 setVideos(res.data);
             } catch (error) {
                 console.error('Error fetching videos:', error);

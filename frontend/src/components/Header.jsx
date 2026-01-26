@@ -3,7 +3,7 @@ import { Menu, Search, Video, Bell, User as UserIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
-const Header = () => {
+const Header = ({ toggleSidebar }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Header = () => {
     return (
         <header className="header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <button><Menu size={24} /></button>
+                <button onClick={toggleSidebar}><Menu size={24} /></button>
                 <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <div style={{ backgroundColor: 'red', padding: '4px', borderRadius: '4px' }}>
                         <Video size={18} color="white" />

@@ -14,6 +14,8 @@ const ChannelStudio = () => {
     const [channelForm, setChannelForm] = useState({ channelName: '', description: '' });
     const [videoForm, setVideoForm] = useState({ title: '', description: '', videoUrl: '', thumbnailUrl: '', category: 'Music' });
 
+    const [editingVideo, setEditingVideo] = useState(null);
+
     useEffect(() => {
         if (user) {
             fetchChannel();
@@ -22,23 +24,42 @@ const ChannelStudio = () => {
 
     const fetchChannel = async () => {
         try {
-            // In a real app, we'd fetch the user's channel. 
-            // For now, let's assume one user can have one channel and we find it by owner ID.
-            // Note: This needs a backend endpoint to fetch channel by owner.
-            // I'll use a hacky way since I didn't add that specific endpoint.
-            const res = await axios.get(`http://localhost:5000/api/videos?uploader=${user._id}`);
+            const res = await axios.get(`http://localhost:5001/api/videos?uploader=${user._id}`);
             setVideos(res.data);
-            // Let's check if the user has a channel
-            // This part is a bit simplified for the demo
         } catch (error) {
             console.error('Error fetching studio data:', error);
         }
     };
 
+    const handleUpdateVideo = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.put(`http://localhost:5001/api/videos/${editingVideo._id}`, videoForm, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            setVideos(videos.map(v => v._id === res.data._id ? res.data : v));
+            setEditingVideo(null);
+            setVideoForm({ title: '', description: '', videoUrl: '', thumbnailUrl: '', category: 'Music' });
+        } catch (error) {
+            alert('Error updating video');
+        }
+    };
+
+    const startEditing = (video) => {
+        setEditingVideo(video);
+        setVideoForm({
+            title: video.title,
+            description: video.description,
+            videoUrl: video.videoUrl,
+            thumbnailUrl: video.thumbnailUrl,
+            category: video.category
+        });
+    };
+
     const handleCreateChannel = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`http://localhost:5000/api/channels`, channelForm, {
+            const res = await axios.post(`http://localhost:5001/api/channels`, channelForm, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setChannel(res.data);
@@ -55,14 +76,14 @@ const ChannelStudio = () => {
             // For this project, let's assume we create a default channel if none exists
             let activeChannelId = channel?._id;
             if (!activeChannelId) {
-                const cRes = await axios.post(`http://localhost:5000/api/channels`, { channelName: `${user.username}'s Channel`, description: 'My first channel' }, {
+                const cRes = await axios.post(`http://localhost:5001/api/channels`, { channelName: `${user.username}'s Channel`, description: 'My first channel' }, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 activeChannelId = cRes.data._id;
                 setChannel(cRes.data);
             }
 
-            const res = await axios.post(`http://localhost:5000/api/videos`, {
+            const res = await axios.post(`http://localhost:5001/api/videos`, {
                 ...videoForm,
                 channelId: activeChannelId
             }, {
@@ -79,7 +100,7 @@ const ChannelStudio = () => {
     const handleDeleteVideo = async (videoId) => {
         if (!window.confirm('Are you sure you want to delete this video?')) return;
         try {
-            await axios.delete(`http://localhost:5000/api/videos/${videoId}`, {
+            await axios.delete(`http://localhost:5001/api/videos/${videoId}`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setVideos(videos.filter(v => v._id !== videoId));
@@ -102,14 +123,14 @@ const ChannelStudio = () => {
                 </button>
             </div>
 
-            {isUploadingVideo && (
+            {(isUploadingVideo || editingVideo) && (
                 <div style={modalOverlay}>
                     <div style={modalContent}>
-                        <h2>Upload Video</h2>
-                        <form onSubmit={handleUploadVideo} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+                        <h2>{editingVideo ? 'Edit Video' : 'Upload Video'}</h2>
+                        <form onSubmit={editingVideo ? handleUpdateVideo : handleUploadVideo} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
                             <input style={inputStyle} placeholder="Title" value={videoForm.title} onChange={e => setVideoForm({...videoForm, title: e.target.value})} required />
                             <textarea style={{...inputStyle, height: '100px'}} placeholder="Description" value={videoForm.description} onChange={e => setVideoForm({...videoForm, description: e.target.value})} required />
-                            <input style={inputStyle} placeholder="Video URL (mp4)" value={videoForm.videoUrl} onChange={e => setVideoForm({...videoForm, videoUrl: e.target.value})} required />
+                            <input style={inputStyle} placeholder="Video URL (mp4)" value={videoForm.videoUrl} onChange={e => setVideoForm({...videoForm, videoUrl: e.target.value})} disabled={!!editingVideo} required />
                             <input style={inputStyle} placeholder="Thumbnail URL" value={videoForm.thumbnailUrl} onChange={e => setVideoForm({...videoForm, thumbnailUrl: e.target.value})} required />
                             <select style={inputStyle} value={videoForm.category} onChange={e => setVideoForm({...videoForm, category: e.target.value})}>
                                 <option value="Music">Music</option>
@@ -118,8 +139,8 @@ const ChannelStudio = () => {
                                 <option value="News">News</option>
                             </select>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px' }}>
-                                <button type="button" onClick={() => setIsUploadingVideo(false)}>Cancel</button>
-                                <button type="submit" style={{ backgroundColor: '#3ea6ff', color: 'black', padding: '8px 16px', borderRadius: '4px', fontWeight: 'bold' }}>Upload</button>
+                                <button type="button" onClick={() => { setIsUploadingVideo(false); setEditingVideo(null); }}>Cancel</button>
+                                <button type="submit" style={{ backgroundColor: '#3ea6ff', color: 'black', padding: '8px 16px', borderRadius: '4px', fontWeight: 'bold' }}>{editingVideo ? 'Update' : 'Upload'}</button>
                             </div>
                         </form>
                     </div>
@@ -150,7 +171,7 @@ const ChannelStudio = () => {
                                 <td style={{ padding: '16px', fontSize: '14px' }}>{video.views}</td>
                                 <td style={{ padding: '16px' }}>
                                     <div style={{ display: 'flex', gap: '16px' }}>
-                                        <button style={{ color: '#aaaaaa' }}><Edit3 size={18} /></button>
+                                        <button onClick={() => startEditing(video)} style={{ color: '#aaaaaa' }}><Edit3 size={18} /></button>
                                         <button onClick={() => handleDeleteVideo(video._id)} style={{ color: '#aaaaaa' }}><Trash2 size={18} /></button>
                                     </div>
                                 </td>

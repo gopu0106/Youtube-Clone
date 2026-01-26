@@ -20,20 +20,22 @@ const SidebarItem = ({ icon: Icon, label, to }) => (
     </NavLink>
 );
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen }) => {
     return (
-        <aside className="sidebar">
-            <SidebarItem icon={Home} label="Home" to="/" />
-            <SidebarItem icon={Compass} label="Shorts" to="/shorts" />
-            <SidebarItem icon={PlaySquare} label="Subscriptions" to="/subscriptions" />
+        <aside className="sidebar" style={{ width: isOpen ? '240px' : '72px' }}>
+            <SidebarItem icon={Home} label={isOpen ? "Home" : ""} to="/" />
+            <SidebarItem icon={Compass} label={isOpen ? "Shorts" : ""} to="/shorts" />
+            <SidebarItem icon={PlaySquare} label={isOpen ? "Subscriptions" : ""} to="/subscriptions" />
             <hr style={{ border: 'none', borderTop: '1px solid #3f3f3f', margin: '12px 0' }} />
-            <div style={{ padding: '0 12px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ fontWeight: '500' }}>You</span>
-                <ChevronRight size={16} />
-            </div>
-            <SidebarItem icon={Clock} label="History" to="/history" />
-            <SidebarItem icon={PlaySquare} label="Your videos" to="/studio" />
-            <SidebarItem icon={ThumbsUp} label="Liked videos" to="/liked" />
+            {isOpen && (
+                <div style={{ padding: '0 12px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <span style={{ fontWeight: '500' }}>You</span>
+                    <ChevronRight size={16} />
+                </div>
+            )}
+            <SidebarItem icon={Clock} label={isOpen ? "History" : ""} to="/history" />
+            <SidebarItem icon={PlaySquare} label={isOpen ? "Your videos" : ""} to="/studio" />
+            <SidebarItem icon={ThumbsUp} label={isOpen ? "Liked videos" : ""} to="/liked" />
         </aside>
     );
 };

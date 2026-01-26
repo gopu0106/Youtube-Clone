@@ -14,9 +14,9 @@ const VideoPlayer = () => {
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const videoRes = await axios.get(`http://localhost:5000/api/videos/${id}`);
+                const videoRes = await axios.get(`http://localhost:5001/api/videos/${id}`);
                 setVideo(videoRes.data);
-                const commentsRes = await axios.get(`http://localhost:5000/api/comments/${id}`);
+                const commentsRes = await axios.get(`http://localhost:5001/api/comments/${id}`);
                 setComments(commentsRes.data);
             } catch (error) {
                 console.error('Error fetching video data:', error);
@@ -29,7 +29,7 @@ const VideoPlayer = () => {
         e.preventDefault();
         if (!user) return alert('Please login to comment');
         try {
-            const res = await axios.post(`http://localhost:5000/api/comments`, {
+            const res = await axios.post(`http://localhost:5001/api/comments`, {
                 videoId: id,
                 text: newComment
             }, {
@@ -42,7 +42,45 @@ const VideoPlayer = () => {
         }
     };
 
+    const handleLike = async () => {
+        if (!user) return alert('Please login to like');
+        try {
+            const res = await axios.post(`http://localhost:5001/api/videos/${id}/like`, {}, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            setVideo(res.data);
+        } catch (error) {
+            console.error('Error liking video:', error);
+        }
+    };
+
+    const handleDislike = async () => {
+        if (!user) return alert('Please login to dislike');
+        try {
+            const res = await axios.post(`http://localhost:5001/api/videos/${id}/dislike`, {}, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            setVideo(res.data);
+        } catch (error) {
+            console.error('Error disliking video:', error);
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await axios.delete(`http://localhost:5001/api/comments/${commentId}`, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            setComments(comments.filter(c => c._id !== commentId));
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+        }
+    };
+
     if (!video) return <div style={{ padding: '20px' }}>Loading...</div>;
+
+    const isLiked = video.likes?.includes(user?._id);
+    const isDisliked = video.dislikes?.includes(user?._id);
 
     return (
         <div style={{ display: 'flex', gap: '24px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -73,18 +111,21 @@ const VideoPlayer = () => {
                     
                     <div style={{ display: 'flex', gap: '8px' }}>
                         <div style={{ display: 'flex', backgroundColor: '#272727', borderRadius: '20px', overflow: 'hidden' }}>
-                            <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRight: '1px solid #3f3f3f' }}>
-                                <ThumbsUp size={20} /> {video.likes?.length || 0}
+                            <button 
+                                onClick={handleLike}
+                                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRight: '1px solid #3f3f3f', color: isLiked ? '#3ea6ff' : 'white' }}
+                            >
+                                <ThumbsUp size={20} fill={isLiked ? '#3ea6ff' : 'none'} /> {video.likes?.length || 0}
                             </button>
-                            <button style={{ padding: '8px 16px' }}>
-                                <ThumbsDown size={20} />
+                            <button 
+                                onClick={handleDislike}
+                                style={{ padding: '8px 16px', color: isDisliked ? '#3ea6ff' : 'white' }}
+                            >
+                                <ThumbsDown size={20} fill={isDisliked ? '#3ea6ff' : 'none'} />
                             </button>
                         </div>
                         <button style={{ backgroundColor: '#272727', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <Share2 size={20} /> Share
-                        </button>
-                        <button style={{ backgroundColor: '#272727', padding: '8px', borderRadius: '50%' }}>
-                            <MoreHorizontal size={20} />
                         </button>
                     </div>
                 </div>
@@ -128,10 +169,15 @@ const VideoPlayer = () => {
                                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#4caf50', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                     {comment.userId?.username?.charAt(0).toUpperCase()}
                                 </div>
-                                <div>
-                                    <p style={{ fontSize: '13px', fontWeight: 'bold' }}>
-                                        @{comment.userId?.username} <span style={{ fontWeight: 'normal', color: '#aaaaaa', marginLeft: '4px' }}>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                                    </p>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <p style={{ fontSize: '13px', fontWeight: 'bold' }}>
+                                            @{comment.userId?.username} <span style={{ fontWeight: 'normal', color: '#aaaaaa', marginLeft: '4px' }}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                                        </p>
+                                        {user && user._id === comment.userId?._id && (
+                                            <button onClick={() => handleDeleteComment(comment._id)} style={{ color: '#aaaaaa' }}><MoreHorizontal size={16} /></button>
+                                        )}
+                                    </div>
                                     <p style={{ fontSize: '14px', marginTop: '4px' }}>{comment.text}</p>
                                 </div>
                             </div>
