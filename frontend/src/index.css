@@ -126,7 +126,30 @@ button {
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
 }
 
-.header {
+input {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 10px 16px;
+  border-radius: var(--radius-xl);
+  font-family: inherit;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  width: 100%;
+  outline: none;
+}
+
+input:focus {
+  border-color: #3ea6ff;
+  background-color: var(--bg-tertiary);
+  box-shadow: 0 0 0 2px rgba(62, 166, 255, 0.2);
+}
+
+.input-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
   height: 56px;
   background-color: var(--bg-color);
   display: flex;
