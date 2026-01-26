@@ -150,8 +150,12 @@ input:focus {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+.header {
   height: 56px;
-  background-color: var(--bg-color);
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -160,6 +164,33 @@ input:focus {
   top: 0;
   width: 100%;
   z-index: 100;
+}
+
+.search-container {
+  display: flex;
+  flex: 1;
+  max-width: 600px;
+  margin: 0 40px;
+}
+
+.search-input {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-btn {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-left: none;
+  padding: 0 20px;
+  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  color: var(--text-secondary);
+}
+
+.search-btn:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .sidebar {

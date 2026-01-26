@@ -15,65 +15,56 @@ const Header = ({ toggleSidebar }) => {
 
     return (
         <header className="header">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <button onClick={toggleSidebar}><Menu size={24} /></button>
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ backgroundColor: 'red', padding: '4px', borderRadius: '4px' }}>
-                        <Video size={18} color="white" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button className="btn-icon" onClick={toggleSidebar}>
+                    <Menu size={22} />
+                </button>
+                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
+                    <div style={{ backgroundColor: 'var(--accent-primary)', padding: '5px', borderRadius: '6px', display: 'flex' }}>
+                        <Video size={16} color="white" />
                     </div>
-                    <span style={{ fontWeight: 'bold', fontSize: '20px' }}>YouTube</span>
+                    <span style={{ fontWeight: '700', fontSize: '18px', letterSpacing: '-0.5px' }}>YouTube</span>
                 </Link>
             </div>
 
-            <form onSubmit={handleSearch} style={{ display: 'flex', flex: 1, maxWidth: '600px', margin: '0 40px' }}>
+            <form onSubmit={handleSearch} className="search-container">
                 <input 
                     type="text" 
                     placeholder="Search" 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ 
-                        flex: 1, 
-                        backgroundColor: '#121212', 
-                        border: '1px solid #303030', 
-                        padding: '8px 16px', 
-                        borderRadius: '20px 0 0 20px',
-                        color: 'white',
-                        fontSize: '16px'
-                    }}
+                    className="search-input"
                 />
-                <button style={{ 
-                    backgroundColor: '#222222', 
-                    border: '1px solid #303030', 
-                    padding: '0 20px', 
-                    borderRadius: '0 20px 20px 0',
-                    borderLeft: 'none'
-                }}>
-                    <Search size={20} />
+                <button type="submit" className="search-btn">
+                    <Search size={18} />
                 </button>
             </form>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <button><Video size={24} /></button>
-                <button><Bell size={24} /></button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button className="btn-icon">
+                    <Video size={20} />
+                </button>
+                <button className="btn-icon">
+                    <Bell size={20} />
+                </button>
                 {user ? (
-                    <Link to="/studio" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#3f51b5', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center' }}>
+                    <Link to="/studio">
+                        <div className="btn-icon" style={{ 
+                            backgroundColor: 'var(--bg-tertiary)', 
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            border: '1px solid var(--glass-border)'
+                        }}>
                             {user.username.charAt(0).toUpperCase()}
                         </div>
                     </Link>
                 ) : (
-                    <Link to="/auth" style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '8px', 
-                        border: '1px solid #3ea6ff', 
+                    <Link to="/auth" className="btn btn-ghost" style={{ 
+                        border: '1px solid var(--glass-border)',
                         color: '#3ea6ff', 
-                        padding: '6px 12px', 
-                        borderRadius: '20px',
-                        fontWeight: '500'
                     }}>
-                        <UserIcon size={20} />
-                        Sign In
+                        <UserIcon size={18} />
+                        <span style={{ marginLeft: '4px' }}>Sign In</span>
                     </Link>
                 )}
             </div>
