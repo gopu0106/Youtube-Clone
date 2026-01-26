@@ -53,6 +53,31 @@ button {
   left: 0;
   padding: 12px;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 72px;
+  }
+  .sidebar span {
+    display: none;
+  }
+  main {
+    margin-left: 72px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  main {
+    margin-left: 0 !important;
+  }
+  .header form {
+    display: none !important;
+  }
 }
 
 .video-grid {
