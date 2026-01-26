@@ -5,12 +5,14 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { ThumbsUp, ThumbsDown, Share2, MoreHorizontal } from 'lucide-react';
 import { formatViews, formatTimeAgo } from '../utils/format';
+import RecommendedVideoCard from '../components/RecommendedVideoCard';
 
 const VideoPlayer = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
     const [video, setVideo] = useState(null);
     const [comments, setComments] = useState([]);
+    const [recommendedVideos, setRecommendedVideos] = useState([]);
     const [newComment, setNewComment] = useState('');
 
     useEffect(() => {
@@ -20,6 +22,9 @@ const VideoPlayer = () => {
                 setVideo(videoRes.data);
                 const commentsRes = await axios.get(`http://localhost:5001/api/comments/${id}`);
                 setComments(commentsRes.data);
+                
+                const recRes = await axios.get(`http://localhost:5001/api/videos`);
+                setRecommendedVideos(recRes.data.filter(v => v._id !== id).slice(0, 10));
             } catch (error) {
                 console.error('Error fetching video data:', error);
             }
@@ -214,9 +219,16 @@ const VideoPlayer = () => {
             </div>
             
             <div style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <h4 style={{ fontWeight: '700', fontSize: '16px' }}>Related Videos</h4>
-                <div style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', backgroundColor: 'var(--bg-secondary)', textAlign: 'center' }}>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>More videos coming soon...</p>
+                <h4 style={{ fontWeight: '800', fontSize: '16px', letterSpacing: '-0.2px' }}>Up next</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {recommendedVideos.map(v => (
+                        <RecommendedVideoCard key={v._id} video={v} />
+                    ))}
+                    {recommendedVideos.length === 0 && (
+                        <div style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', backgroundColor: 'var(--bg-secondary)', textAlign: 'center' }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>No related videos found.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </motion.div>
