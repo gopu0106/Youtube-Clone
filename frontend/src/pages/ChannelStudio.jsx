@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { Trash2, Edit3, Plus } from 'lucide-react';
+import { formatViews } from '../utils/format';
 
 const ChannelStudio = () => {
     const { user } = useContext(AuthContext);
@@ -188,6 +190,21 @@ const ChannelStudio = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+                <div className="input-glass" style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-sm)' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase' }}>Total Videos</p>
+                    <h3 style={{ fontSize: '28px', fontWeight: '800', marginTop: '8px' }}>{videos.length}</h3>
+                </div>
+                <div className="input-glass" style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-sm)' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase' }}>Total Views</p>
+                    <h3 style={{ fontSize: '28px', fontWeight: '800', marginTop: '8px' }}>{formatViews(videos.reduce((acc, v) => acc + (v.views || 0), 0))}</h3>
+                </div>
+                <div className="input-glass" style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-sm)' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase' }}>Subscribers</p>
+                    <h3 style={{ fontSize: '28px', fontWeight: '800', marginTop: '8px' }}>{formatViews(channel?.subscribers?.length || 0)}</h3>
+                </div>
+            </div>
 
             <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-md)' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
